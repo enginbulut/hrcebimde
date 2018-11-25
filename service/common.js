@@ -1,4 +1,5 @@
 "use strict";
+const passport = require("passport");
 
 const wrapError = (errors, errorCode) => {
   return {
@@ -7,11 +8,21 @@ const wrapError = (errors, errorCode) => {
     errors: errors
   };
 };
-const post = (router, url, callback, ...handlers) => {
+const publicPost = (router, url, callback, ...handlers) => {
   addRoute(router, "post", url, callback, handlers);
 };
 
-const get = (router, url, callback, ...handlers) => {
+const publicGet = (router, url, callback, ...handlers) => {
+  addRoute(router, "get", url, callback, handlers);
+};
+
+const privatePost = (router, url, callback, ...handlers) => {
+  handlers.push(passport.authenticate("jwt", { session: false }));
+  addRoute(router, "post", url, callback, handlers);
+};
+
+const privateGet = (router, url, callback, ...handlers) => {
+  handlers.push(passport.authenticate("jwt", { session: false }));
   addRoute(router, "get", url, callback, handlers);
 };
 
@@ -61,5 +72,8 @@ const response = (
 
 module.exports = {
   helper: { wrapError, response },
-  api: { post, get }
+  api: {
+    private: { post: privatePost, get: privateGet },
+    public: { post: publicPost, get: publicGet }
+  }
 };
