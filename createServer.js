@@ -1,20 +1,8 @@
 const restify = require("restify");
 const passport = require("passport");
 
-const router = new (require("restify-router")).Router();
-const index = require("./routes/index");
-const users = require("./routes/api/admin/users");
-const roles = require("./routes/api/admin/roles");
-const departments = require("./routes/api/admin/departments");
-const branches = require("./routes/api/admin/branches");
-
-router.add("/", index);
-router.add("/api/admin/users", users);
-router.add("/api/admin/roles", roles);
-router.add("/api/admin/departments", departments);
-router.add("/api/admin/branches", branches);
-
 const createServer = async port => {
+  const router = getRouter();
   const server = restify.createServer({
     name: "HR Cebimde API",
     version: "1.0.0"
@@ -53,9 +41,25 @@ const createServer = async port => {
     console.log("%s listening at %s", server.name, server.url);
   });
 
-  server.on("uncaughtException", function(req, res, route, err) {
+  server.on("uncaughtException", function(req, res, route, ex) {
     console.log(err);
   });
+};
+
+const getRouter = () => {
+  const router = new (require("restify-router")).Router();
+  const index = require("./routes/index");
+  const users = require("./routes/api/admin/users");
+  const roles = require("./routes/api/admin/roles");
+  const departments = require("./routes/api/admin/departments");
+  const branches = require("./routes/api/admin/branches");
+
+  router.add("/", index);
+  router.add("/api/admin/users", users);
+  router.add("/api/admin/roles", roles);
+  router.add("/api/admin/departments", departments);
+  router.add("/api/admin/branches", branches);
+  return router;
 };
 
 module.exports = createServer;
