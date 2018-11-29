@@ -1,5 +1,4 @@
 const router = new (require("restify-router")).Router();
-const passport = require("passport");
 const common = require("../../../service/common");
 
 //Load Services
