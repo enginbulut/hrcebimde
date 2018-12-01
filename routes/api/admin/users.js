@@ -17,8 +17,14 @@ common.api.public.post(router, "/login", async function(req) {
 common.api.private.get(router, "/current", req => {
   return {
     name: req.user.name,
-    email: req.user.email
+    email: req.user.email,
+    id: req.user.id
   };
+});
+
+common.api.private.post(router, "/changePassword", async function(req) {
+  const updatedUser = await userService.changePassword(req.user.id, req.body);
+  return updatedUser;
 });
 
 module.exports = router;

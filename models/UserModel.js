@@ -55,14 +55,28 @@ const getUserByEmail = async email => {
         userModel.email,
         userModel.password,
         userModel.avatar,
-        userModel.date
+        userModel.date,
+        userModel.id
       )
     : undefined;
 };
 
-const findById = async id => {
-  const user = await UserModel.findById(id);
-  return user;
+const findWithId = async id => {
+  try {
+    const userModel = await UserModel.findById(id);
+    return userModel
+      ? new User(
+          userModel.name,
+          userModel.email,
+          userModel.password,
+          userModel.avatar,
+          userModel.date,
+          userModel.id
+        )
+      : undefined;
+  } catch (ex) {
+    throw ex;
+  }
 };
 
 module.exports = {
@@ -70,5 +84,5 @@ module.exports = {
   convertToModel: convertToModels(convertToModel),
   save: save(UserModel, convertToModels(convertToModel), userSelector),
   getUserByEmail,
-  findById
+  findWithId
 };

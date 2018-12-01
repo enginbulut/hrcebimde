@@ -51,7 +51,8 @@ const loginUser = async payload => {
     const jwtPayload = {
       email: user.email,
       name: user.name,
-      avatar: user.avatar
+      avatar: user.avatar,
+      id: user.id
     }; //create JWT payload
     return utils.signPayload(jwtPayload);
   } else {
@@ -60,7 +61,21 @@ const loginUser = async payload => {
   }
 };
 
+const changePassword = async (id, payload) => {
+  const user = await UserModel.findWithId(id);
+  if (!user) {
+    errors.id = "User cannot found!";
+    throw common.helper.wrapError(errors, 404);
+  }
+
+  var hashedNewPassword = utils.getHash(payload.newPassword);
+  user.password = hashedNewPassword;
+  await UserModel.save(user);
+  return user;
+};
+
 module.exports = {
   registerUser,
-  loginUser
+  loginUser,
+  changePassword
 };
