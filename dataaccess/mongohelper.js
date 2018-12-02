@@ -28,6 +28,7 @@ const save = (
       upsert: true
     });
   }
+  return models;
 };
 
 const convertToModels = modelconvertor => entities => {

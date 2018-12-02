@@ -7,6 +7,10 @@ const Schema = mongoose.Schema;
 
 //Create Schema
 const UserSchema = new Schema({
+  role: {
+    type: Schema.Types.ObjectId,
+    ref: "roles"
+  },
   name: {
     type: String,
     required: true
@@ -36,19 +40,23 @@ const convertToModel = (user = new User()) => {
   model.password = user.password;
   model.date = user.date;
   model.avatar = user.avatar;
-  // Mongo auto generated id is not used and fails the updates.
-  delete model._doc._id;
+  model._doc._id = mongoose.Types.ObjectId(user.id);
+  model.role = user.role.id;
+
   return model;
 };
 
 const userSelector = user => {
   return {
-    email: user.email
+    _id: user.id
   };
 };
 
 const getUserByEmail = async email => {
-  const userModel = await UserModel.findOne({ email });
+  const userModel = await UserModel.findOne({ email }).populate("role", [
+    "name",
+    "permissioncode"
+  ]);
   return userModel
     ? new User(
         userModel.name,
@@ -56,33 +64,32 @@ const getUserByEmail = async email => {
         userModel.password,
         userModel.avatar,
         userModel.date,
-        userModel.id
+        userModel.id,
+        userModel.role
       )
     : undefined;
 };
 
-const findWithId = async id => {
-  try {
-    const userModel = await UserModel.findById(id);
-    return userModel
-      ? new User(
-          userModel.name,
-          userModel.email,
-          userModel.password,
-          userModel.avatar,
-          userModel.date,
-          userModel.id
-        )
-      : undefined;
-  } catch (ex) {
-    throw ex;
-  }
+const findById = async id => {
+  const userModel = await UserModel.findById(id).populate("role", [
+    "name",
+    "permissioncode"
+  ]);
+  return userModel
+    ? new User(
+        userModel.name,
+        userModel.email,
+        userModel.password,
+        userModel.avatar,
+        userModel.date,
+        userModel.id,
+        userModel.role
+      )
+    : undefined;
 };
 
 module.exports = {
-  UserModel,
-  convertToModel: convertToModels(convertToModel),
   save: save(UserModel, convertToModels(convertToModel), userSelector),
   getUserByEmail,
-  findWithId
+  findById
 };
