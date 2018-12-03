@@ -7,6 +7,7 @@ const validateLoginInput = require("../validation/login");
 //Load User model and user domain
 const UserModel = require("../models/UserModel");
 const User = require("../domain/user");
+const RoleModel = require("../models/RoleModel");
 
 const registerUser = async payload => {
   const { errors, isValid } = validateRegisterInput(payload);
@@ -25,9 +26,23 @@ const registerUser = async payload => {
 
   var hashedPassword = utils.getHash(payload.password);
 
-  const newUser = new User(payload.name, payload.email, hashedPassword, avatar);
+  const defaultRole = await RoleModel.getGuestRole();
 
-  await UserModel.save(newUser);
+  let newUser = new User(
+    payload.name,
+    payload.email,
+    hashedPassword,
+    avatar,
+    undefined,
+    undefined,
+    defaultRole
+  );
+
+  const result = await UserModel.save(newUser);
+
+  newUser.id = result.id;
+  delete newUser.password;
+  delete newUser.date;
 
   return newUser;
 };
@@ -51,7 +66,10 @@ const loginUser = async payload => {
     const jwtPayload = {
       email: user.email,
       name: user.name,
-      avatar: user.avatar
+      avatar: user.avatar,
+      id: user.id,
+      permissioncode: user.role.permissioncode,
+      roleName: user.role.name
     }; //create JWT payload
     return utils.signPayload(jwtPayload);
   } else {
@@ -60,7 +78,52 @@ const loginUser = async payload => {
   }
 };
 
+const changePassword = async (id, payload) => {
+  const user = await UserModel.findById(id);
+  if (!user) {
+    errors.id = "User cannot found!";
+    throw common.helper.wrapError(errors, 404);
+  }
+
+  var hashedNewPassword = utils.getHash(payload.newPassword);
+  user.password = hashedNewPassword;
+  await UserModel.save(user);
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    avatar: user.avatar,
+    rolename: user.role.name,
+    permissioncode: user.role.permissioncode
+  };
+};
+
+const updateRole = async (id, payload) => {
+  let user = await UserModel.findById(id);
+  if (!user) {
+    errors.id = "User cannot found!";
+    throw common.helper.wrapError(errors, 404);
+  }
+
+  const role = await RoleModel.getRoleById(payload.id);
+  if (!role) {
+    errors.id = "Role cannot found!";
+    throw common.helper.wrapError(errors, 404);
+  }
+
+  user.role = role;
+
+  const updatedUser = await UserModel.save(user);
+
+  delete user.password;
+  delete user.date;
+
+  return user;
+};
+
 module.exports = {
   registerUser,
-  loginUser
+  loginUser,
+  changePassword,
+  updateRole
 };

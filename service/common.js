@@ -16,14 +16,23 @@ const publicGet = (router, url, callback, ...handlers) => {
   addRoute(router, "get", url, callback, handlers);
 };
 
-const privatePost = (router, url, callback, ...handlers) => {
-  handlers.push(passport.authenticate("jwt", { session: false }));
-  addRoute(router, "post", url, callback, handlers);
+const publicDelete = (router, url, callback, ...handlers) => {
+  addRoute(router, "del", url, callback, handlers);
 };
 
-const privateGet = (router, url, callback, ...handlers) => {
+const privatePost = (router, url, roleType, callback, ...handlers) => {
   handlers.push(passport.authenticate("jwt", { session: false }));
-  addRoute(router, "get", url, callback, handlers);
+  addPrivateRoute(router, "post", url, roleType, callback, handlers);
+};
+
+const privateGet = (router, url, roleType, callback, ...handlers) => {
+  handlers.push(passport.authenticate("jwt", { session: false }));
+  addPrivateRoute(router, "get", url, roleType, callback, handlers);
+};
+
+const privateDelete = (router, url, roleType, callback, ...handlers) => {
+  handlers.push(passport.authenticate("jwt", { session: false }));
+  addPrivateRoute(router, "del", url, roleType, callback, handlers);
 };
 
 const catchErrors = callback => {
@@ -39,6 +48,27 @@ const catchErrors = callback => {
     }
     next();
   };
+};
+
+const addPrivateRoute = (
+  router,
+  httpMethod,
+  url,
+  roleType,
+  callback,
+  ...handlers
+) => {
+  router[httpMethod](
+    url,
+    handlers,
+    catchErrors(async function(req, res) {
+      if (roleType > req.user.role.permissioncode) res.send(401);
+      else {
+        const result = await callback(req);
+        res.json(response(result));
+      }
+    })
+  );
 };
 
 const addRoute = (router, httpMethod, url, callback, ...handlers) => {
@@ -73,7 +103,7 @@ const response = (
 module.exports = {
   helper: { wrapError, response },
   api: {
-    private: { post: privatePost, get: privateGet },
-    public: { post: publicPost, get: publicGet }
+    private: { post: privatePost, get: privateGet, delete: privateDelete },
+    public: { post: publicPost, get: publicGet, delete: publicDelete }
   }
 };

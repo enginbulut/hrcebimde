@@ -4,7 +4,6 @@ const keys = require("../config/keys");
 
 //Load User model and user domain
 const UserModel = require("../models/UserModel");
-const User = require("../domain/user");
 
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();

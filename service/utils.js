@@ -6,6 +6,15 @@ const bcrypt = require("bcryptjs");
 const keys = require("../config/keys");
 const jwt = require("jsonwebtoken");
 
+const RoleType = Object.freeze({
+  Guest: 0,
+  Employee: 1,
+  Manager: 2,
+  HR: 3,
+  Admin: 4,
+  SuperAdmin: 5
+});
+
 const getGravatar = email => {
   const avatar = gravatar.url(email, {
     s: "200", //Size
@@ -36,5 +45,6 @@ module.exports = {
   getGravatar,
   getHash,
   compareHash,
-  signPayload
+  signPayload,
+  RoleType
 };
