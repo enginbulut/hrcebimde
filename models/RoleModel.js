@@ -69,7 +69,7 @@ const getRoleById = async id => {
     : undefined;
 };
 
-const getRoleList = async name => {
+const getRoleList = async () => {
   const roleModels = await RoleModel.find({});
 
   return roleModels.length > 0

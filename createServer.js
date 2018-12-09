@@ -51,12 +51,14 @@ const getRouter = () => {
   const index = require("./routes/index");
   const users = require("./routes/api/admin/users");
   const roles = require("./routes/api/admin/roles");
+  const titles = require("./routes/api/admin/titles");
   const departments = require("./routes/api/admin/departments");
   const branches = require("./routes/api/admin/branches");
 
   router.add("/", index);
   router.add("/api/admin/users", users);
   router.add("/api/admin/roles", roles);
+  router.add("/api/admin/titles", titles);
   router.add("/api/admin/departments", departments);
   router.add("/api/admin/branches", branches);
   return router;

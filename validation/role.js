@@ -10,7 +10,7 @@ module.exports = function validateAddRoleInput(data) {
     : "";
 
   if (validator.isEmpty(data.name)) {
-    errors.name = "Email field is required";
+    errors.name = "Role name field is required";
   }
 
   if (!validator.isNumeric(data.permissioncode.toString())) {
