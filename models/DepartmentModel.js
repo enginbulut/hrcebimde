@@ -3,6 +3,8 @@ const Department = require("../domain/department");
 const mongoose = require("mongoose");
 const { save, convertToModels } = require("../dataaccess/mongohelper");
 
+const Schema = mongoose.Schema;
+
 //Create Schema
 const DepartmentSchema = new Schema({
   name: {
