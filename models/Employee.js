@@ -1,5 +1,4 @@
 require("../dataaccess/mongo");
-const User = require("../domain/user");
 const mongoose = require("mongoose");
 const { save, convertToModels } = require("../dataaccess/mongohelper");
 
@@ -45,30 +44,34 @@ const EmployeeSchema = new Schema({
     required: true
   },
   militaryObligation: Boolean,
+  homeAddress: String,
   kidCount: Number,
-  homeAddress: String
 });
 
-// const UserModel = mongoose.model("users", UserSchema, "users");
+const EmployeeModel = mongoose.model("employees", EmployeeSchema, "employees");
+/**
+ * 
+ * @param {import("../domain/employee")} user 
+ */
+const convertToModel = (user) => {
+  let model = new EmployeeModel();
+  model.startDate=user.startDate;
+  model.branch=user.branch;
+  model.department=user.department;
+  model.workScheduleType=user.workScheduleType;
+  model.title=user.title;
+  model.gender=user.gender;
+  model._doc._id = mongoose.Types.ObjectId(user.id);
+  
+  return model;
+};
 
-// const convertToModel = (user = new User()) => {
-//   let model = new UserModel();
-//   model.name = user.name;
-//   model.email = user.email;
-//   model.password = user.password;
-//   model.date = user.date;
-//   model.avatar = user.avatar;
-//   model._doc._id = mongoose.Types.ObjectId(user.id);
-//   model.role = user.role.id;
+const selector = item => {
+  return {
+      _id: item.id
+  }
+}
 
-//   return model;
-// };
-
-// const userSelector = user => {
-//   return {
-//     _id: user.id
-//   };
-// };
 
 // const getUserByEmail = async email => {
 //   const userModel = await UserModel.findOne({ email }).populate("role", [
@@ -107,7 +110,6 @@ const EmployeeSchema = new Schema({
 // };
 
 module.exports = {
-  save: save(UserModel, convertToModels(convertToModel), userSelector),
-  getUserByEmail,
+  save: save(EmployeeModel, convertToModels(convertToModel), selector),
   findById
 };
