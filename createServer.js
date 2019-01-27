@@ -54,6 +54,7 @@ const getRouter = () => {
   const titles = require("./routes/api/admin/titles");
   const departments = require("./routes/api/admin/departments");
   const branches = require("./routes/api/admin/branches");
+  const announcements = require("./routes/api/admin/announcement");
 
   router.add("/", index);
   router.add("/api/admin/users", users);
@@ -61,6 +62,7 @@ const getRouter = () => {
   router.add("/api/admin/titles", titles);
   router.add("/api/admin/departments", departments);
   router.add("/api/admin/branches", branches);
+  router.add("/api/admin/announcements", announcements);
   return router;
 };
 

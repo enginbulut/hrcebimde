@@ -3,6 +3,8 @@ const Title = require("../domain/title");
 const mongoose = require("mongoose");
 const { save, convertToModels } = require("../dataaccess/mongohelper");
 
+const Schema = mongoose.Schema;
+
 //Create Schema
 const TitleSchema = new Schema({
   name: {
