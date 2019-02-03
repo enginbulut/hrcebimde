@@ -118,6 +118,13 @@ const getAll = async () => {
   return items ? Employee.converter(items) : [];
 };
 
+const setUser = async (id, userId) => {
+  const item = await EmployeeModel.findById(new mongoose.mongo.ObjectID(id));
+  item.user = new mongoose.mongo.ObjectID(userId);
+  await item.save();
+  return item;
+};
+
 const validateSchema = (data) => {
   let isValid = true;
   let errors = {};
@@ -133,11 +140,31 @@ const validateSchema = (data) => {
   };
 };
 
+const validateSetUser = (id, userId) => {
+  let isValid = true;
+  let errors = {};
+  if (!id) {
+    isValid = false;
+    errors.id = `${id} field is required`;
+  }
+  if (!userId) {
+    isValid = false;
+    errors.userId = `${userId} field is required`;
+  }
+  return {
+    errors,
+    isValid: isEmpty(errors)
+  };
+};
 
 module.exports = {
-  validateSchema,
+  validate: {
+    schema: validateSchema,
+    setUser: validateSetUser
+  },
   save: save(EmployeeModel, convertToModels(convertToModel), selector),
   findById,
   getAll,
-  deletebyId
+  deletebyId,
+  setUser
 };

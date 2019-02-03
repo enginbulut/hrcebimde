@@ -24,4 +24,9 @@ common.api.private.delete(router, '/delete/:employeeId', utils.RoleType.Manager,
     return employee;
 });
 
+common.api.private.post(router, '/setuser', utils.RoleType.Manager, async function (req) {
+    const employee = await employeeService.setEmployeeUser(req.body.employeeId, req.body.userId);
+    return employee;
+});
+
 module.exports = router;
