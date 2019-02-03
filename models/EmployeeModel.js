@@ -99,6 +99,10 @@ const findById = async id => {
   return item ? Employee.converter(item) : undefined;
 };
 
+const deletebyId = async id => {
+  await EmployeeModel.findByIdAndDelete(new mongoose.mongo.ObjectID(id));
+};
+
 const getAll = async () => {
   const items = await EmployeeModel.find()
     .populate("user", ["name", "email"])
@@ -135,5 +139,6 @@ module.exports = {
   validateSchema,
   save: save(EmployeeModel, convertToModels(convertToModel), selector),
   findById,
-  getAll
+  getAll,
+  deletebyId
 };

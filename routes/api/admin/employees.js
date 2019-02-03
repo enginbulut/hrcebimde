@@ -4,18 +4,23 @@ const utils = require("../../../service/utils");
 
 const employeeService = require('../../../service/employee');
 
-common.api.public.get(router, "/get", async function (req) {
+common.api.private.get(router, "/get", utils.RoleType.Manager, async function (req) {
     const employee = await employeeService.getAll();
     return employee;
 });
 
-common.api.public.get(router, "/get/:employeeId", async function (req) {
+common.api.private.get(router, "/get/:employeeId", utils.RoleType.Manager, async function (req) {
     const employee = await employeeService.getEmployee(req.params.employeeId);
     return employee;
 });
 
-common.api.public.post(router, '/save',  async function (req) {
+common.api.private.post(router, '/save', utils.RoleType.Manager, async function (req) {
     const employee = await employeeService.upsertEmployee(req.body);
+    return employee;
+});
+
+common.api.private.delete(router, '/delete/:employeeId', utils.RoleType.Manager, async function (req) {
+    const employee = await employeeService.deleteEmployee(req.params.employeeId);
     return employee;
 });
 

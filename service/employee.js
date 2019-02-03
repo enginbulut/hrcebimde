@@ -24,8 +24,13 @@ const getAll = async () => {
     return employees;
 };
 
+const deleteEmployee = async id => {
+    await EmployeeModel.deletebyId(id);
+}
+
 module.exports = {
     getEmployee,
     upsertEmployee,
-    getAll
+    getAll,
+    deleteEmployee
 }

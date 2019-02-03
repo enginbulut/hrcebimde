@@ -2,9 +2,6 @@
 
 
 function employee() {
-
-
-
     /**
      * Converts model item(s) to domain item
      * @param {({}|[])} item employee(s) to be converted
