@@ -71,15 +71,13 @@ const convertToModel = (user) => {
   model.workScheduleType = user.workScheduleType;
   model.title = user.title;
   model.gender = user.gender;
-  // model._doc._id = mongoose.Types.ObjectId(user.id);
-  // Mongo auto generated id is not used and fails the updates.
-  delete model._doc._id;
+  model._doc._id = mongoose.Types.ObjectId(user.id);
   return model;
 };
 
 const selector = item => {
   return {
-    title: item.title
+    _id: item.id
   }
 }
 
