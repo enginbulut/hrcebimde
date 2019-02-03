@@ -19,8 +19,13 @@ const getEmployee = async id => {
     return employee;
 };
 
+const getAll = async () => {
+    const employees = await EmployeeModel.getAll();
+    return employees;
+};
 
 module.exports = {
     getEmployee,
-    upsertEmployee
+    upsertEmployee,
+    getAll
 }

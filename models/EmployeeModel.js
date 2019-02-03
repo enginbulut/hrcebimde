@@ -85,7 +85,7 @@ const selector = item => {
 const findById = async id => {
   const item = await EmployeeModel.findById(new mongoose.mongo.ObjectID(id))
     .populate("user", ["name", "email"])
-    .populate("branch",["name"])
+    .populate("branch", ["name"])
     .populate("department", ["name"])
     .populate({
       path: "manager",
@@ -96,17 +96,23 @@ const findById = async id => {
       }
     });
 
-  return item
-    ? new Employee(
-      item.user,
-      item.startDate,
-      item.branch,
-      item.department,
-      item.workScheduleType,
-      item.title,
-      item.gender
-    )
-    : undefined;
+  return item ? Employee.converter(item) : undefined;
+};
+
+const getAll = async () => {
+  const items = await EmployeeModel.find()
+    .populate("user", ["name", "email"])
+    .populate("branch", ["name"])
+    .populate("department", ["name"])
+    .populate({
+      path: "manager",
+      select: ["title"],
+      populate: {
+        path: "user",
+        select: ["name", "email"]
+      }
+    });
+  return items ? Employee.converter(items) : [];
 };
 
 const validateSchema = (data) => {
@@ -128,5 +134,6 @@ const validateSchema = (data) => {
 module.exports = {
   validateSchema,
   save: save(EmployeeModel, convertToModels(convertToModel), selector),
-  findById
+  findById,
+  getAll
 };
