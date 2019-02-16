@@ -3,6 +3,8 @@ const Branch = require("../domain/branch");
 const mongoose = require("mongoose");
 const { save, convertToModels } = require("../dataaccess/mongohelper");
 
+const Schema = mongoose.Schema;
+
 //Create Schema
 const BranchSchema = new Schema({
   name: {
