@@ -69,11 +69,20 @@ const convertToModel = (user) => {
   let model = new EmployeeModel();
   model.user = user.user;
   model.startDate = user.startDate;
+  model.endDate = user.endDate;
   model.branch = user.branch;
   model.department = user.department;
   model.workScheduleType = user.workScheduleType;
   model.title = user.title;
   model.gender = user.gender;
+  model.dateOfBirth = user.dateOfBirth;
+  model.phoneNumber = user.phoneNumber;
+  model.grade = user.grade;
+  model.citizenNo = user.citizenNo;
+  model.maritalStats = user.maritalStats;
+  model.militaryObligation = user.militaryObligation;
+  model.homeAddress = user.homeAddress;
+  model.kidCount = user.kidCount;
   // model._doc._id = mongoose.Types.ObjectId(user.id);
   delete model._doc._id;
   return model;
@@ -90,7 +99,7 @@ const findById = async id => {
     .populate("user", ["name", "email"])
     .populate("branch", ["name"])
     .populate("department", ["name"])
-    .populate("title",["name"])
+    .populate("title", ["name"])
     .populate({
       path: "manager",
       select: ["title"],
@@ -112,7 +121,7 @@ const getAll = async () => {
     .populate("user", ["name", "email"])
     .populate("branch", ["name"])
     .populate("department", ["name"])
-    .populate("title",["name"])
+    .populate("title", ["name"])
     .populate({
       path: "manager",
       select: ["title"],
@@ -149,7 +158,6 @@ const validateSchema = (data) => {
 module.exports = {
   validate: {
     schema: validateSchema,
-    setUser: validateSetUser
   },
   save: save(EmployeeModel, convertToModels(convertToModel), selector),
   findById,

@@ -34,5 +34,4 @@ module.exports = {
     upsertEmployee,
     getAll,
     deleteEmployee,
-    setEmployeeUser
 }
