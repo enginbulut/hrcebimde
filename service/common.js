@@ -1,6 +1,12 @@
 "use strict";
 const passport = require("passport");
 
+const addDays = days => {
+  let today = new Date();
+  today.setDate(today.getDate() + days);
+  return today;
+};
+
 const wrapError = (errors, errorCode) => {
   return {
     code: errorCode,
@@ -101,7 +107,7 @@ const response = (
 };
 
 module.exports = {
-  helper: { wrapError, response },
+  helper: { wrapError, response, addDays },
   api: {
     private: { post: privatePost, get: privateGet, delete: privateDelete },
     public: { post: publicPost, get: publicGet, delete: publicDelete }
