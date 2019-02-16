@@ -10,7 +10,9 @@ const Schema = mongoose.Schema;
 schemaOptions = {
   user: {
     type: Schema.Types.ObjectId,
-    ref: "users"
+    ref: "users",
+    required: true,
+    unique: true
   },
   startDate: {
     type: Date,
@@ -39,8 +41,9 @@ schemaOptions = {
     ref: "employees"
   },
   title: {
-    type: String,
-    required: true,
+    type: Schema.Types.ObjectId,
+    ref: "titles",
+    required: true
   },
   dateOfBirth: Date,
   grade: String,
@@ -55,7 +58,7 @@ schemaOptions = {
   homeAddress: String,
   kidCount: Number,
 };
-const EmployeeSchema = new Schema(schemaOptions);
+const EmployeeSchema = new Schema(schemaOptions, { _id: false });
 
 const EmployeeModel = mongoose.model("employees", EmployeeSchema, "employees");
 /**
@@ -71,21 +74,23 @@ const convertToModel = (user) => {
   model.workScheduleType = user.workScheduleType;
   model.title = user.title;
   model.gender = user.gender;
-  model._doc._id = mongoose.Types.ObjectId(user.id);
+  // model._doc._id = mongoose.Types.ObjectId(user.id);
+  delete model._doc._id;
   return model;
 };
 
 const selector = item => {
   return {
-    _id: item.id
+    user: item.user
   }
 }
 
 const findById = async id => {
-  const item = await EmployeeModel.findById(new mongoose.mongo.ObjectID(id))
+  const item = await EmployeeModel.find({ user: new mongoose.mongo.ObjectID(id) })
     .populate("user", ["name", "email"])
     .populate("branch", ["name"])
     .populate("department", ["name"])
+    .populate("title",["name"])
     .populate({
       path: "manager",
       select: ["title"],
@@ -99,7 +104,7 @@ const findById = async id => {
 };
 
 const deletebyId = async id => {
-  await EmployeeModel.findByIdAndDelete(new mongoose.mongo.ObjectID(id));
+  await EmployeeModel.findOneAndDelete({ user: new mongoose.mongo.ObjectID(id) });
 };
 
 const getAll = async () => {
@@ -107,6 +112,7 @@ const getAll = async () => {
     .populate("user", ["name", "email"])
     .populate("branch", ["name"])
     .populate("department", ["name"])
+    .populate("title",["name"])
     .populate({
       path: "manager",
       select: ["title"],
@@ -133,23 +139,6 @@ const validateSchema = (data) => {
       isValid = false;
       errors[prop] = `${prop} field is required`;
     }
-  }
-  return {
-    errors,
-    isValid: isEmpty(errors)
-  };
-};
-
-const validateSetUser = (id, userId) => {
-  let isValid = true;
-  let errors = {};
-  if (!id) {
-    isValid = false;
-    errors.id = `${id} field is required`;
-  }
-  if (!userId) {
-    isValid = false;
-    errors.userId = `${userId} field is required`;
   }
   return {
     errors,
