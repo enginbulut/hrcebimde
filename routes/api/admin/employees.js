@@ -9,8 +9,8 @@ common.api.private.get(router, "/get", utils.RoleType.Manager, async function (r
     return employee;
 });
 
-common.api.private.get(router, "/get/:employeeId", utils.RoleType.Manager, async function (req) {
-    const employee = await employeeService.getEmployee(req.params.employeeId);
+common.api.private.get(router, "/get/:userId", utils.RoleType.Manager, async function (req) {
+    const employee = await employeeService.getEmployee(req.params.userId);
     return employee;
 });
 
@@ -19,14 +19,10 @@ common.api.private.post(router, '/save', utils.RoleType.Manager, async function 
     return employee;
 });
 
-common.api.private.delete(router, '/delete/:employeeId', utils.RoleType.Manager, async function (req) {
-    const employee = await employeeService.deleteEmployee(req.params.employeeId);
+common.api.private.delete(router, '/delete/:userId', utils.RoleType.Manager, async function (req) {
+    const employee = await employeeService.deleteEmployee(req.params.userId);
     return employee;
 });
 
-common.api.private.post(router, '/setuser', utils.RoleType.Manager, async function (req) {
-    const employee = await employeeService.setEmployeeUser(req.body.employeeId, req.body.userId);
-    return employee;
-});
 
 module.exports = router;
