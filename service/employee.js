@@ -14,8 +14,8 @@ const upsertEmployee = async payload => {
 };
 
 
-const getEmployee = async id => {
-    const employee = await EmployeeModel.findById(id);
+const getEmployee = async userId => {
+    const employee = await EmployeeModel.findById(userId);
     return employee;
 };
 
@@ -24,8 +24,8 @@ const getAll = async () => {
     return employees;
 };
 
-const deleteEmployee = async id => {
-    await EmployeeModel.deletebyId(id);
+const deleteEmployee = async userId => {
+    await EmployeeModel.deletebyId(userId);
 }
 
 
