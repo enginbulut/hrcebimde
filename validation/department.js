@@ -11,7 +11,7 @@ module.exports = function validateDepartmentInput(data) {
   }
 
   return {
-    errors,
+  errors,
     isValid: isEmpty(errors)
   };
 };
