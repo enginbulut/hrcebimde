@@ -53,16 +53,21 @@ const getRouter = () => {
   const roles = require("./routes/api/admin/roles");
   const titles = require("./routes/api/admin/titles");
   const departments = require("./routes/api/admin/departments");
+  const meetingRooms = require("./routes/api/admin/meetingRoom");
   const branches = require("./routes/api/admin/branches");
   const announcements = require("./routes/api/admin/announcement");
+  const employees = require("./routes/api/admin/employees");
 
   router.add("/", index);
   router.add("/api/admin/users", users);
   router.add("/api/admin/roles", roles);
   router.add("/api/admin/titles", titles);
   router.add("/api/admin/departments", departments);
+  router.add("/api/admin/meetingRooms", meetingRooms);
   router.add("/api/admin/branches", branches);
   router.add("/api/admin/announcements", announcements);
+  router.add("/api/admin/employees", employees);
+
   return router;
 };
 

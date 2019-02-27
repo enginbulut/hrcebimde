@@ -38,7 +38,15 @@ const convertToModels = modelconvertor => entities => {
   return modelconvertor(entities);
 };
 
+const convertToDomains = domainconvertor => entities => {
+  if (Array.isArray(entities)) {
+    return entities.map(entity => domainconvertor(entity));
+  }
+  return domainconvertor(entities);
+}
+
 module.exports = {
   save: save,
-  convertToModels: convertToModels
+  convertToModels: convertToModels,
+  convertToDomains: convertToDomains
 };

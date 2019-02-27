@@ -7,8 +7,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}\\index.js"
+            "name": "api debug",
+            "program": "${workspaceFolder}\\app.js"
         }
     ]
 }
