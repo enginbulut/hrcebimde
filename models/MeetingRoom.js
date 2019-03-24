@@ -68,6 +68,6 @@ module.exports = {
     save: save(MeetingRoomModel, convertToModels(convertToModel), selector),
     getMeetingRoomByName,
     deleteMeetingRoom,
-    getActiveRooms: getRoomsGeneric({ isActive: true }),
-    getAllRooms: getRoomsGeneric({}),
+    getActiveRooms: () => getRoomsGeneric({ isActive: true }),
+    getAllRooms: () => getRoomsGeneric({}),
 }
