@@ -4,8 +4,9 @@ const utils = require("../../../service/utils");
 
 //Load Services
 const meetingRoomService = require("../../../service/meetingRoom");
+const meetingRoomBookService = require('../../../service/meetingRoomBook');
 
-common.api.private.get(router, "/list", utils.RoleType.Employee, async function(
+common.api.private.get(router, "/list", utils.RoleType.Employee, async function (
   req
 ) {
   const departments = await meetingRoomService.getActiveMeetingRooms();
@@ -27,5 +28,14 @@ common.api.private.delete(
     return await meetingRoomService.deleteMeetingRoom(req.body.name.toLocaleLowerCase());
   }
 );
+
+common.api.private.post(router, "/book", utils.RoleType.Employee, async function (
+  req
+) {
+  const book = await meetingRoomBookService.saveMeetingRoom(req.body);
+  return book;
+});
+
+
 
 module.exports = router;

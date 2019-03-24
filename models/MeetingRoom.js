@@ -19,8 +19,6 @@ schemaOptions = {
     }
 };
 
-
-
 const MeetingRoomSchema = new Schema(schemaOptions);
 
 const MeetingRoomModel = mongoose.model("meetingRooms", MeetingRoomSchema, "meetingRooms");
