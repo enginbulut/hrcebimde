@@ -2,6 +2,9 @@
 const createServer = require("./createServer");
 const { connect: connectMongo } = require("./dataaccess/mongo");
 
+/**
+ * Creates server with the specified port
+ */
 const createServers = async () => {
   const port = process.env.PORT || 5000;
   await createServer(port);
